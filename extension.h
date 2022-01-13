@@ -1,15 +1,11 @@
-
 #ifndef _INCLUDE_COLLISIONHOOK_EXTENSION_H_
 #define _INCLUDE_COLLISIONHOOK_EXTENSION_H_
 
-
 #include "smsdk_ext.h"
-
 
 class IPhysicsEnvironment;
 class IPhysicsCollisionSolver;
 class IPhysicsObject;
-
 
 class CollisionHook :
 	public SDKExtension
@@ -24,7 +20,7 @@ public:
 	 * @param late		Whether or not the module was loaded after map load.
 	 * @return			True to succeed loading, false to fail.
 	 */
-	virtual bool SDK_OnLoad( char *error, size_t maxlength, bool late );
+	virtual bool SDK_OnLoad(char *error, size_t maxlength, bool late);
 	
 	/**
 	 * @brief This is called right before the extension is unloaded.
@@ -60,7 +56,7 @@ public:
 	 * @param late			Whether or not Metamod considers this a late load.
 	 * @return				True to succeed, false to fail.
 	 */
-	virtual bool SDK_OnMetamodLoad( ISmmAPI *ismm, char *error, size_t maxlength, bool late );
+	virtual bool SDK_OnMetamodLoad(ISmmAPI *ismm, char *error, size_t maxlength, bool late);
 
 	/**
 	 * @brief Called when Metamod is detaching, after the extension version is called.
@@ -86,16 +82,17 @@ public:
 
 public: // hooks
 	IPhysicsEnvironment *CreateEnvironment();
-	void SetCollisionSolver( IPhysicsCollisionSolver *pSolver );
-	int VPhysics_ShouldCollide( IPhysicsObject *pObj1, IPhysicsObject *pObj2, void *pGameData1, void *pGameData2 );
 
+	void SetCollisionSolver(IPhysicsCollisionSolver *pSolver);
+
+	int VPhysics_ShouldCollide(IPhysicsObject *pObj1, IPhysicsObject *pObj2, void *pGameData1, void *pGameData2);
 };
 
 // adapted from util_shared.h
-inline const CBaseEntity *UTIL_EntityFromEntityHandle( const IHandleEntity *pConstHandleEntity )
+inline const CBaseEntity *UTIL_EntityFromEntityHandle(const IHandleEntity *pConstHandleEntity)
 {
-	IHandleEntity *pHandleEntity = const_cast<IHandleEntity *>( pConstHandleEntity );
-	IServerUnknown *pUnk = static_cast<IServerUnknown *>( pHandleEntity );
+	IHandleEntity *pHandleEntity = const_cast<IHandleEntity *>(pConstHandleEntity);
+	IServerUnknown *pUnk = static_cast<IServerUnknown *>(pHandleEntity);
 
 	return pUnk->GetBaseEntity();
 }
