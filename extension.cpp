@@ -29,6 +29,13 @@ IForward *g_pPassFwd = NULL;
 
 DETOUR_DECL_STATIC2(PassServerEntityFilterFunc, bool, const IHandleEntity *, pTouch, const IHandleEntity *, pPass)
 {
+#if defined (WIN32) && SOURCE_ENGINE == SE_LEFT4DEAD2
+	// Can't call into SourcePawn off thread (left 4 dead 2 - windows crash fix).
+	if (!ThreadInMainThread()) {
+		return DETOUR_STATIC_CALL(PassServerEntityFilterFunc)(pTouch, pPass);
+	}
+#endif
+
 	if (g_pPassFwd->GetFunctionCount() == 0) {
 		return DETOUR_STATIC_CALL(PassServerEntityFilterFunc)(pTouch, pPass);
 	}
