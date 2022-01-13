@@ -48,6 +48,7 @@ public:
 	//virtual bool QueryRunning(char *error, size_t maxlength);
 public:
 #if defined SMEXT_CONF_METAMOD
+#if !(defined (WIN32) && SOURCE_ENGINE == SE_LEFT4DEAD2)
 	/**
 	 * @brief Called when Metamod is attached, before the extension version is called.
 	 *
@@ -78,6 +79,7 @@ public:
 	 * @return				True to succeed, false to fail.
 	 */
 	//virtual bool SDK_OnMetamodPauseChange(bool paused, char *error, size_t maxlength);
+#endif
 #endif
 
 public: // hooks

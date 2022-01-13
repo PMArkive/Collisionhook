@@ -14,15 +14,17 @@
 CollisionHook g_CollisionHook;
 SMEXT_LINK(&g_CollisionHook);
 
+#if !(defined (WIN32) && SOURCE_ENGINE == SE_LEFT4DEAD2)
+IPhysics *g_pPhysics = NULL;
+
 SH_DECL_HOOK0(IPhysics, CreateEnvironment, SH_NOATTRIB, 0 , IPhysicsEnvironment *);
 SH_DECL_HOOK1_void(IPhysicsEnvironment, SetCollisionSolver, SH_NOATTRIB, 0, IPhysicsCollisionSolver *);
 SH_DECL_HOOK4(IPhysicsCollisionSolver, ShouldCollide, SH_NOATTRIB, 0, int, IPhysicsObject *, IPhysicsObject *, void *, void *);
+#endif
 
 IGameConfig *g_pGameConf = NULL;
 
 CDetour *g_pFilterDetour = NULL;
-
-IPhysics *g_pPhysics = NULL;
 
 IForward *g_pCollisionFwd = NULL;
 IForward *g_pPassFwd = NULL;
@@ -104,17 +106,18 @@ bool CollisionHook::SDK_OnLoad(char *error, size_t maxlength, bool late)
 
 void CollisionHook::SDK_OnUnload()
 {
-	forwards->ReleaseForward(g_pCollisionFwd);
-	forwards->ReleaseForward(g_pPassFwd);
-
-	gameconfs->CloseGameConfigFile(g_pGameConf);
-
 	if (g_pFilterDetour) {
 		g_pFilterDetour->Destroy();
 		g_pFilterDetour = NULL;
 	}
+
+	forwards->ReleaseForward(g_pCollisionFwd);
+	forwards->ReleaseForward(g_pPassFwd);
+
+	gameconfs->CloseGameConfigFile(g_pGameConf);
 }
 
+#if !(defined (WIN32) && SOURCE_ENGINE == SE_LEFT4DEAD2)
 bool CollisionHook::SDK_OnMetamodLoad(ISmmAPI *ismm, char *error, size_t maxlen, bool late)
 {
 	GET_V_IFACE_CURRENT(GetPhysicsFactory, g_pPhysics, IPhysics, VPHYSICS_INTERFACE_VERSION);
@@ -199,3 +202,4 @@ int CollisionHook::VPhysics_ShouldCollide(IPhysicsObject *pObj1, IPhysicsObject 
 	// otherwise, game decides
 	RETURN_META_VALUE(MRES_IGNORED, 0);
 }
+#endif
